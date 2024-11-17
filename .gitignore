@@ -1,0 +1,8 @@
+.bazel/**
+.vscode/settings.json
+# compiled output
+node_modules
+/bazel-*
+local.bazelrc
+**/prisma/prisma-client
+.aspect/bazelrc/current/*

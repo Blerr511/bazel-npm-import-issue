@@ -1,0 +1,41 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+npm_link_all_packages(name = "node_modules")
+
+srcs = glob(
+    [
+        "src/**/*.ts",
+    ],
+)
+
+deps = [
+    ":node_modules",
+]
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+)
+
+ts_project(
+    name = "ts",
+    srcs = srcs,
+    declaration = False,
+    incremental = False,
+    source_map = True,
+    tsconfig = ":tsconfig",
+    validate = True,
+    visibility = ["//visibility:public"],
+    deps = deps,
+)
+
+js_binary(
+    name = "start",
+    args = ["-r tsconfig-paths/register"],
+    data = [
+        ":ts",
+    ],
+    entry_point = ":src/main.js",
+)
